@@ -1,5 +1,5 @@
 // Yuval Mor - 205380173
-
+/*
 #include <sys/wait.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -53,8 +53,10 @@ char** getToken(char* command, int* size){
 
 char* getCommand(){
     char* command;
+    char forEnter;
     char buffer [MAX_CHAR_PER_LINE];
     scanf(SCAN_WITHOUT_SPACES,buffer);
+    scanf("%c",&forEnter);
     // Allocate the length of the command plus one char for the \0
     command = (char*)malloc(ADD_CHAR(strlen(buffer)));
     if(command==NULL){
@@ -64,7 +66,7 @@ char* getCommand(){
     return command;
 }
 
-int findFreePlace(int jobsPlaces[MAX_JOBS]){
+int findFreePlace(const int jobsPlaces[MAX_JOBS]){
     int i = 0;
     while (i < MAX_JOBS){
         if(jobsPlaces[i] == EMPTY){
@@ -90,11 +92,8 @@ void addJob(Job* jobs[MAX_JOBS],int jobsPlaces[MAX_JOBS],pid_t pid,char** comman
 }
 
 void freeJob(Job* jobToFree){
-    for(int i=0; i<jobToFree->commandSize;i++){
-        free(jobToFree->command[i]);
-        free(jobToFree->command);
-        free(jobToFree);
-    }
+    free(jobToFree->command);
+    free(jobToFree);
 }
 
 void deleteJob(Job* jobs[MAX_JOBS],int jobsPlaces[MAX_JOBS],pid_t pid){
@@ -103,7 +102,7 @@ void deleteJob(Job* jobs[MAX_JOBS],int jobsPlaces[MAX_JOBS],pid_t pid){
     while (flag){
         if(jobs[i]->pid == pid){
             flag = false;
-            free(jobs[i]);
+            freeJob(jobs[i]);
             jobsPlaces[i] = 0;
         }
     }
@@ -123,6 +122,7 @@ void preformJob(char** args,Job* jobs[MAX_JOBS],int jobsPlaces[MAX_JOBS],int com
     if(waitpid(pid,NULL,0) == SYSTEM_CALL_FAILURE){
         perror(WAIT_ERROR);
     }
+    deleteJob(jobs,jobsPlaces,pid);
 }
 
 int main() {
@@ -141,7 +141,7 @@ int main() {
         } else {
            preformJob(args,jobs,jobsPlaces,commandSize);
         }
-        keepRunning = false;
     }
+    free(command);
     return 0;
-}
+}*/
